@@ -38,9 +38,8 @@ class _Part(NamedTuple):
 def _movable_parts(shape_dir: str) -> List[_Part]:
     """Movable ``(part_idx, joint_type, part_name)`` triples, in data-prep's ordering.
 
-    Mirrors ``data_prep/render_masks.py::_movable_parts`` so that ``part_idx``
-    lines up with the ``{part_idx}_{joint}`` motion-type used in every
-    video/mask/pose filename.
+    ``part_idx`` lines up with the ``{part_idx}_{joint}`` motion-type used in
+    every video/mask/pose filename.
     """
     with open(os.path.join(shape_dir, "mobility_v2.json")) as f:
         art_data = json.load(f)
@@ -153,8 +152,6 @@ class FewShotArticulationDataset(Dataset):
             idx += 1
         cap.release()
         if len(frames) < self.num_frames:
-            # Repeat the last frame if the clip is shorter than requested (should not
-            # happen with data produced by data_prep, but keeps this robust).
             frames += [frames[-1]] * (self.num_frames - len(frames))
         return np.stack(frames[: self.num_frames], axis=0)
 
@@ -174,20 +171,18 @@ class FewShotArticulationDataset(Dataset):
         videos, masks, poses, first_frames = [], [], [], []
         for view in self.views:
             paths = self._view_paths(shape_dir, motion_type, view)
-            video = self._read_video(paths["video"])  # (f, h, w, 3) uint8
+            video = self._read_video(paths["video"])
             videos.append(video)
             first_frames.append(video[0])
             masks.append(self._read_mask(paths["mask"]))
             poses.append(self._read_pose(paths["pose"]))
 
-        # (v, f, h, w, 3) uint8 -> (v, f, 3, h, w) float in [-1, 1]
         mv_videos = np.stack(videos, axis=0).astype(np.float32)
         mv_videos = mv_videos.transpose(0, 1, 4, 2, 3) / 127.5 - 1.0
 
-        # First frame of each view, CLIP-preprocessed for IP-Adapter image conditioning.
         mv_clip_images = self.clip_image_processor(
             np.stack(first_frames, axis=0), return_tensors="pt"
-        ).pixel_values  # (v, 3, clip_h, clip_w)
+        ).pixel_values
 
         return {
             "mv_videos": mv_videos,

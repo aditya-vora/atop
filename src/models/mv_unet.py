@@ -210,7 +210,6 @@ class MaskedTemporalAttention(nn.Module):
         self.attention_op: Optional[Any] = None
 
     def forward(self, x, masks):
-        # x: (b v) (f l) c : token sequence per view, frames*spatial flattened.
         v, f, l = self.num_views, self.num_frames, self.latent_size * self.latent_size
 
         masks = rearrange(masks, "b v h w -> (b v) h w", v=v).contiguous()
@@ -368,7 +367,6 @@ class BasicTransformerBlock3D(nn.Module):
         self.norm3 = nn.LayerNorm(dim)
 
     def forward(self, x, context, num_frames, num_views, masks):
-        # x: (b v f) l c
         x = rearrange(x, "(b v f) l c -> (b f) (v l) c", v=num_views, f=num_frames).contiguous()
         x = self.attn1(self.norm1(x)) + x
 
@@ -593,7 +591,6 @@ class MultiViewUNetModel(ModelMixin, ConfigMixin):
         self.ip_dim = ip_dim
         self.ip_weight = ip_weight
 
-        # Latent spatial size halves at every downsampling level.
         latent_sizes = [image_size // (2**level) for level in range(len(channel_mult))]
 
         if self.ip_dim > 0:
@@ -711,8 +708,6 @@ class MultiViewUNetModel(ModelMixin, ConfigMixin):
         state_dict = load_state_dict(model_file)
 
         missing, unexpected = model.load_state_dict(state_dict, strict=False)
-        # attn_temp (+ its norm_temp) is the only genuinely new submodule; anything else
-        # missing from the checkpoint would indicate a real architecture mismatch.
         new_params = [k for k in missing if "attn_temp" in k or "norm_temp" in k]
         other_missing = [k for k in missing if "attn_temp" not in k and "norm_temp" not in k]
         print(
@@ -730,7 +725,7 @@ class MultiViewUNetModel(ModelMixin, ConfigMixin):
         """
         Args:
             x: (b, v, c, f, h, w) noisy video latents.
-            timesteps: (b,) diffusion timesteps.
+            timesteps: (b,) diffusion timesteps, one per sample and shared across its views.
             context: (b, v, f, seq_len, context_dim) text embeddings, broadcast per view/frame.
             camera: (b, v, camera_dim) camera-to-world poses, one per view.
             ip: (b, v, f, num_tokens, context_dim) CLIP image tokens for IP-Adapter conditioning.
@@ -742,7 +737,6 @@ class MultiViewUNetModel(ModelMixin, ConfigMixin):
         num_frames = self.num_frames
         x = rearrange(x, "b v c f h w -> (b v) c f h w", v=num_views).contiguous()
 
-        # Broadcast the one-per-sample timestep to the (b v) axis the network operates on.
         timesteps = timesteps.unsqueeze(1).expand(bsz, num_views).reshape(-1)
         t_emb = timestep_embedding(timesteps, self.model_channels)
         emb = self.time_embed(t_emb.to(x.dtype))

@@ -59,7 +59,7 @@ class MultiViewVideoPipeline(DiffusionPipeline):
             truncation=True,
             return_tensors="pt",
         ).input_ids.to(device)
-        return self.text_encoder(input_ids)[0]  # (2, seq, dim) if do_cfg else (1, seq, dim)
+        return self.text_encoder(input_ids)[0]
 
     def _encode_image(self, mv_clip_images: torch.Tensor, device) -> torch.Tensor:
         """mv_clip_images: (v, 3, H, W), CLIP-preprocessed -> (v, num_tokens, hidden_dim)."""
@@ -124,9 +124,9 @@ class MultiViewVideoPipeline(DiffusionPipeline):
         prompt_embeds = self._encode_prompt(prompt, negative_prompt, do_cfg, device)
         context = prompt_embeds[:, None, None].repeat(1, num_views, num_frames, 1, 1)
 
-        image_embeds = self._encode_image(mv_clip_images, device)  # (v, n, c)
+        image_embeds = self._encode_image(mv_clip_images, device)
         if do_cfg:
-            image_embeds = torch.stack([torch.zeros_like(image_embeds), image_embeds])  # (2, v, n, c)
+            image_embeds = torch.stack([torch.zeros_like(image_embeds), image_embeds])
         else:
             image_embeds = image_embeds[None]
         ip = image_embeds[:, :, None].repeat(1, 1, num_frames, 1, 1)
@@ -155,7 +155,7 @@ class MultiViewVideoPipeline(DiffusionPipeline):
         if output_type == "latent":
             return latents
 
-        videos = self.decode_latents(latents)[0]  # (v, f, H, W, 3)
+        videos = self.decode_latents(latents)[0]
         if output_type == "pil":
             frames = (videos.numpy() * 255).astype(np.uint8)
             return [[Image.fromarray(frame) for frame in view] for view in frames]

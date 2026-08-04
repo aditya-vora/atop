@@ -54,9 +54,6 @@ from src.utils.cam_utils import get_camera
 
 logger = get_logger(__name__)
 
-# Which UNet submodules get finetuned: the pretrained cross-view/IP-Adapter
-# attention projections, plus every parameter of the newly added temporal +
-# mask-conditioned attention block (attn_temp is new, so all of it trains).
 DEFAULT_TRAINABLE_MODULES = (
     "attn1.to_q",
     "attn2.to_q",
@@ -170,7 +167,6 @@ def main():
 
     num_views = len(args.views)
 
-    # --- pretrained components (frozen) + the inflated video UNet (partially trained) ---
     noise_scheduler = DDIMScheduler.from_pretrained(args.pretrained_model_path, subfolder="scheduler")
     tokenizer = CLIPTokenizer.from_pretrained(args.pretrained_model_path, subfolder="tokenizer")
     text_encoder = CLIPTextModel.from_pretrained(args.pretrained_model_path, subfolder="text_encoder")
@@ -267,12 +263,12 @@ def main():
                     truncation=True,
                     return_tensors="pt",
                 ).input_ids.to(accelerator.device)
-                prompt_embeds = text_encoder(prompt_ids)[0]  # (b, seq, dim)
+                prompt_embeds = text_encoder(prompt_ids)[0]
 
-                mv_videos = batch["mv_videos"].to(accelerator.device, dtype=weight_dtype)  # (b, v, f, 3, h, w)
-                mv_clip_images = batch["mv_clip_images"].to(accelerator.device, dtype=weight_dtype)  # (b, v, 3, ch, cw)
-                mv_masks = batch["mv_masks"].to(accelerator.device, dtype=weight_dtype)  # (b, v, h, w)
-                mv_poses = batch["mv_poses"]  # (b, v, 3), stays on CPU for get_camera
+                mv_videos = batch["mv_videos"].to(accelerator.device, dtype=weight_dtype)
+                mv_clip_images = batch["mv_clip_images"].to(accelerator.device, dtype=weight_dtype)
+                mv_masks = batch["mv_masks"].to(accelerator.device, dtype=weight_dtype)
+                mv_poses = batch["mv_poses"]
 
                 num_frames = mv_videos.shape[2]
 
@@ -283,7 +279,7 @@ def main():
                 clip_images_in = rearrange(mv_clip_images, "b v c h w -> (b v) c h w")
                 clip_embeds = image_encoder(clip_images_in, output_hidden_states=True).hidden_states[-2]
                 clip_embeds = rearrange(clip_embeds, "(b v) n c -> b v n c", v=num_views)
-                ip = clip_embeds[:, :, None].repeat(1, 1, num_frames, 1, 1)  # (b, v, f, n, c)
+                ip = clip_embeds[:, :, None].repeat(1, 1, num_frames, 1, 1)
 
                 camera = torch.stack([get_camera(mv_poses[i]) for i in range(bsz)])
                 camera = camera.to(accelerator.device, dtype=weight_dtype)

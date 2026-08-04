@@ -1,9 +1,9 @@
 """Camera-pose conversion for the multi-view UNet's camera embedding.
 
 The data-prep pipeline stores each view's camera as a single spherical pose
-``azimuth elevation distance`` (see ``data_prep/assemble_videos.py``). This
-module converts a batch of those raw poses into the flattened 4x4
-camera-to-world matrices the UNet's ``camera_embed`` head expects.
+``azimuth elevation distance``. This module converts a batch of those raw
+poses into the flattened 4x4 camera-to-world matrices the UNet's
+``camera_embed`` head expects.
 """
 
 from __future__ import annotations
@@ -45,6 +45,9 @@ def get_camera(poses: torch.Tensor, blender_coord: bool = True) -> torch.Tensor:
     Args:
         poses: ``(num_views, 3)`` tensor of ``(azimuth, elevation, distance)``
             in degrees/scene-units, as stored in ``poses/pose_r_*.txt``.
+            Azimuths follow the data-prep camera rig's convention: measured
+            from Blender's +X axis, offset by 90 degrees below to align with
+            this module's orbit-camera parameterization.
         blender_coord: apply the Blender <-> OpenGL axis swap used throughout
             the data-prep renders.
 
@@ -56,9 +59,6 @@ def get_camera(poses: torch.Tensor, blender_coord: bool = True) -> torch.Tensor:
     poses_np = poses.detach().cpu().numpy()
     cams = []
     for azim, elev, radius in poses_np:
-        # Match the convention used by the data-prep camera rig: azimuths are
-        # measured from Blender's +X axis and offset by 90 degrees here to
-        # align with the orbit-camera parameterization.
         if azim <= 0:
             azim = 180 + abs(180 + azim)
         pose = _orbit_camera(elev, azim + 90, radius=radius)

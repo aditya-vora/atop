@@ -1,4 +1,4 @@
-# ATOP
+# Articulate That Object Part (ATOP): 3D Part Articulation via Text and Motion Personalization
 
 Official implementation of **ATOP**
 ([arXiv:2502.07278](https://arxiv.org/abs/2502.07278)).
@@ -12,16 +12,20 @@ covers the finetuning and inference side of that pipeline.
 
 ```
 .
-├── checkpoints/                 # pretrained + finetuned diffusers checkpoints (not in git)
-├── datasetv0/                   # training data: videos, masks, splits (not in git)
 ├── diffusers/                   # customized diffusers fork this repo runs against (see below)
+├── docs/                        # project webpage (aditya-vora.github.io/atop)
 ├── src/                         # model, dataset, and pipeline code (includes src/ip_adapter/,
 │                                 # which diffusers/ depends on)
 ├── finetune.py                  # training entry point
 ├── infer.py                     # inference entry point
 ├── requirements.txt             # core Python deps (training / inference)
+├── .gitignore
 └── README.md                    # you are here
 ```
+
+`checkpoints/` and `datasetv0/` aren't part of the repo (they're `.gitignore`d) —
+see [1.3](#13-get-the-pretrained-checkpoint) and [section 2](#2-training-data)
+for how to populate them locally.
 
 ## Modules
 
