@@ -1,0 +1,744 @@
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="./resources/css/bulma.min.css" />
+  <link rel="stylesheet" href="./resources/css/slide.css" />
+  <link rel="stylesheet" href="./resources/css/bulma-carousel.min.css" />
+  <link rel="stylesheet" href="./resources/css/bulma-slider.min.css" />
+  <link rel="stylesheet" href="./resources/css/fontawesome.all.min.css" />
+  <link rel="stylesheet" href="./resources/css/carasoul.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" />
+  <link rel="stylesheet" href="./resources/css/index.css" />
+  <!-- <link rel="icon" href="./resources/images/favicon.svg" /> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" type="text/css" href="./resources/css/style.css" media="screen" />
+  <link rel="stylesheet" href="resources/css/dics.original.css" />
+
+
+  <title>Articulate That Object Part (ATOP): 3D Part Articulation from Text and via Motion Personalization</title>
+  <meta property="og:title" content="Articulate That Object Part (ATOP): 3D Part Articulation from Text and via Motion Personalization" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      text-align: center;
+      background-color: #ffffff;
+      /* Optional: Set a background color for better visibility */
+    }
+
+    .larger-arrow {
+      font-size: 2em;
+      /* Adjust the font size as needed */
+      letter-spacing: 4em;
+      /* Adjust the letter spacing as needed */
+      display: inline-block;
+      /* Ensures text-align works */
+    }
+
+    .tbl_video {
+      margin-bottom: 40px;
+    }
+
+    .paper-title .title-letter {
+      font-weight: bold !important;
+      text-decoration: underline !important;
+    }
+
+    .paper-title .title-acronym-letter {
+      font-weight: bold !important;
+      text-decoration: none !important;
+    }
+
+    .paper-title .title-letter-a {
+      color: #c41e3a !important;
+    }
+
+    .paper-title .title-letter-t {
+      color: #006400 !important;
+    }
+
+    .paper-title .title-letter-o {
+      color: #4a90d9 !important;
+    }
+
+    .paper-title .title-letter-p {
+      color: #e67e22 !important;
+    }
+  </style>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+  <style>
+    .video-grid {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .video-grid figure {
+      flex: 1 1 300px;
+      max-width: 400px;
+      min-width: 280px;
+    }
+
+    figure {
+      text-align: center;
+      /* Centers the caption */
+    }
+
+    figcaption {
+      margin-top: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .result-placeholder {
+      width: 100%;
+      min-height: 280px;
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #f5f5f5;
+      border: 2px dashed #cccccc;
+      border-radius: 8px;
+      color: #888888;
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin: 0 auto;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    .result-placeholder-prompt {
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 8px;
+      background-color: #ffffff;
+      border: 1px dashed #bbbbbb;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: #666666;
+    }
+
+    .result-media-card {
+      width: 100%;
+      margin: 0 auto;
+      padding: 12px;
+      background-color: #f5f5f5;
+      border: 1px solid #dddddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .result-media-card .result-placeholder-prompt {
+      margin-bottom: 10px;
+      border-style: solid;
+      font-style: italic;
+    }
+
+    .result-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 6px;
+    }
+
+    .video-grid--results {
+      align-items: flex-start;
+    }
+
+    .video-grid--results-two-col figure {
+      flex: 1 1 350px;
+      max-width: 500px;
+    }
+
+    .deformation-grid figure {
+      flex: 1 1 350px;
+      max-width: 500px;
+    }
+
+    .deformation-media-card {
+      width: 100%;
+      padding: 12px;
+      background-color: #ffffff;
+      border: 1px solid #dddddd;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .deformation-video {
+      width: 100%;
+      display: block;
+      border-radius: 6px;
+      background-color: #ffffff;
+    }
+
+    .citation-section {
+      margin-top: 2rem;
+      text-align: left;
+    }
+
+    .citation-section h1 {
+      text-align: center;
+    }
+
+    .citation-block {
+      position: relative;
+      background-color: #f5f5f5;
+      border: 1px solid #dddddd;
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      text-align: left;
+    }
+
+    .citation-block pre {
+      margin: 0;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      white-space: pre-wrap;
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border: 1px solid #cccccc;
+      border-radius: 4px;
+      background-color: #ffffff;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      border-color: #888888;
+    }
+
+    .video-grid--results figure {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-grid--results .result-media-card--videos {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: #ffffff;
+    }
+
+    .video-grid--results .result-media-card--output {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background-color: #ffffff;
+    }
+
+    .video-grid--results .result-video-stack {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      overflow: hidden;
+      background-color: #ffffff;
+    }
+
+    .video-grid--results .result-video {
+      flex: 1 1 0;
+      min-height: 0;
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 6px;
+      background-color: #ffffff;
+    }
+
+    .video-grid--results .result-output-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 6px;
+      background-color: #ffffff;
+    }
+
+    .result-video-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .result-video {
+      flex: 0 0 auto;
+      width: calc((100% - 10px) / 2);
+      min-width: 0;
+      display: block;
+      border-radius: 6px;
+      background-color: #000000;
+    }
+
+    .centered-title {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 0.2rem;
+    }
+  </style>
+
+  <style>
+    .video-captions {
+      width: 100%;
+      margin: 0.5rem auto;
+      border-collapse: collapse;
+      table-layout: fixed;
+      --num-cols: 4;
+    }
+
+    .video-captions td {
+      width: calc(100% / var(--num-cols));
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+      text-align: center;
+      vertical-align: middle;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="title paper-title">
+      <span class="title-letter title-letter-a" style="font-weight: bold; text-decoration: underline; color: #c41e3a;">A</span>rticulate
+      <span class="title-letter title-letter-t" style="font-weight: bold; text-decoration: underline; color: #006400;">T</span>hat
+      <span class="title-letter title-letter-o" style="font-weight: bold; text-decoration: underline; color: #4a90d9;">O</span>bject
+      <span class="title-letter title-letter-p" style="font-weight: bold; text-decoration: underline; color: #e67e22;">P</span>art
+      (<span class="title-acronym-letter title-letter-a" style="font-weight: bold; color: #c41e3a;">A</span><span class="title-acronym-letter title-letter-t" style="font-weight: bold; color: #006400;">T</span><span class="title-acronym-letter title-letter-o" style="font-weight: bold; color: #4a90d9;">O</span><span class="title-acronym-letter title-letter-p" style="font-weight: bold; color: #e67e22;">P</span>):
+      3D Part Articulation from Text and via Motion Personalization
+    </div>
+
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://aditya-vora.github.io/"> Aditya Vora</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://sauradip.github.io/">Sauradip Nag</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://kwang-ether.github.io/">Kai Wang</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.cs.sfu.ca/~haoz/">Hao (Richard) Zhang</a><sup>1</sup></span>
+          </div>
+          <br>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Simon Fraser University, Vancouver, Canada</span>
+            <span class="author-block" style="margin-left: 2rem;"><sup>2</sup>ShanghaiTech University, Shanghai, China</span>
+          </div>          
+          <br />
+          <br>
+          <div style="height:3rem" aria-hidden="true">
+          <span class="conference-block" style="font-style:italic; font-size:1.2rem;">ACM Transactions on Graphics (SIGGRAPH 2026), Los Angeles</span>
+          </div>
+          </br>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="column has-text-centered">
+      <div class="publication-links">
+        <!-- Paper Link. -->
+        <span class="link-block">
+          <a href="https://dl.acm.org/doi/10.1145/3820375"
+            class="external-link button is-normal is-rounded is-dark">
+            <span class="icon">
+              <i class="fa fa-file-o"></i>
+            </span>
+            <span>Paper</span>
+          </a>
+        </span>
+        <!-- ArXiv Link. -->
+        <span class="link-block">
+          <a href="https://arxiv.org/abs/2502.07278"
+            class="external-link button is-normal is-rounded is-dark">
+            <span class="icon">
+              <i class="fa fa-file-o"></i>
+            </span>
+            <span>arXiv</span>
+          </a>
+        </span>
+        <!-- Code Link. -->
+        <span class="link-block">
+          <a href="https://github.com/aditya-vora/atop" class="external-link button is-normal is-rounded is-dark">
+            <span class="icon">
+              <svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab"
+                data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg="">
+                <path fill="currentColor"
+                  d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z">
+                </path>
+              </svg><!-- <i class="fab fa-github"></i> Font Awesome fontawesome.com -->
+            </span>
+            <span>Code (Coming Soon)</span>
+          </a>
+        </span>
+      </div>
+    </div>
+
+
+    <div class="parent-video-compare-container" id="abstract">
+      
+
+      <h1></h1>
+      <!-- Caption. -->
+      <div class="columns is-centered has-text-centered">
+        <!-- <div class="column is-four-fifths"> -->
+        <div class="column is-full-width">
+            <video
+              class="tbl_video"
+              autoplay
+              loop
+              muted
+              playsinline
+              controls
+              style="width: 100%; max-width: 100%; border-radius: 8px;"
+              aria-label="ATOP method overview">
+              <source src="./resources/videos/idea.mov" type="video/quicktime">
+              <source src="./resources/videos/idea.mov" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <h2 class=" subtitle has-text-centered has-text-justified" style="padding-top: 0px">
+              <p style="font-size: 80%;">
+                Given a static textured input 3D mesh (left), the part to articulate 
+                (highlighted), and a text prompt describing part motion as input, 
+                <span class="title-acronym-letter title-letter-a" style="font-weight: bold; color: #c41e3a;">A</span><span class="title-acronym-letter title-letter-t" style="font-weight: bold; color: #006400;">T</span><span class="title-acronym-letter title-letter-o" style="font-weight: bold; color: #4a90d9;">O</span><span class="title-acronym-letter title-letter-p" style="font-weight: bold; color: #e67e22;">P</span> presents a novel method to estimate the 3D articulation parameters 
+                of the part using controllable multi-view motion generation and differentiable 
+                rendering.
+              </p>
+            </h2>
+          </div>
+      </div>
+
+
+      <h1>Abstract</h1>
+
+      <hr>
+
+      <p class="justified">
+        We present
+        <span class="title-acronym-letter title-letter-a" style="font-weight: bold; color: #c41e3a;">A</span><span class="title-acronym-letter title-letter-t" style="font-weight: bold; color: #006400;">T</span><span class="title-acronym-letter title-letter-o" style="font-weight: bold; color: #4a90d9;">O</span><span class="title-acronym-letter title-letter-p" style="font-weight: bold; color: #e67e22;">P</span>
+        (<span class="title-letter title-letter-a" style="font-weight: bold; text-decoration: underline; color: #c41e3a;">A</span>rticulate
+        <span class="title-letter title-letter-t" style="font-weight: bold; text-decoration: underline; color: #006400;">T</span>hat
+        <span class="title-letter title-letter-o" style="font-weight: bold; text-decoration: underline; color: #4a90d9;">O</span>bject
+        <span class="title-letter title-letter-p" style="font-weight: bold; text-decoration: underline; color: #e67e22;">P</span>art), a novel few-shot method
+        based on motion personalization to articulate a static 3D object with respect
+        to a part and its motion as prescribed in a text prompt. Given the scarcity
+        of available datasets with motion attribute annotations, existing methods
+        struggle to generalize well in this task. In our work, the text input allows us
+        to tap into the power of modern-day diffusion models to generate plausible
+        motion samples for the right object category and part. In turn, the input 3D
+        object provides image prompting to personalize the generated motion to
+        the very input object. Our method starts with a pre-trained diffusion model adapted 
+        for controllable multi-view motion generation. The resulting motion model can then be employed
+        to realize plausible motion of the input 3D object from multiple views. At
+        last, we transfer the personalized motion to the 3D space of the object
+        via differentiable rendering to optimize part articulation parameters by a
+        score distillation sampling loss. 
+      </p>
+      <!--/ Caption. -->
+      </div>
+      <div class="columns is-centered has-text-centered">
+        <!-- <div class="column is-four-fifths"> -->
+        <div class="column is-four-fifths">
+            <video
+              class="tbl_video"
+              autoplay
+              loop
+              muted
+              playsinline
+              controls
+              style="width: 100%; max-width: 100%; border-radius: 8px;"
+              aria-label="ATOP inference pipeline">
+              <source src="./resources/videos/pipeline.mov" type="video/quicktime">
+              <source src="./resources/videos/pipeline.mov" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+
+            <h2 class=" subtitle has-text-centered has-text-justified" style="padding-top: 0px">
+              <p style="font-size: 75%;" class="justified">
+                Inference Pipeline: We begin with a textured, segmented mesh as 
+                input. We then render multi-view images and corresponding masks, 
+                which are fed into a controllable multi-view motion model that 
+                hallucinates part motions conditioned on camera poses and 
+                tailored to the input shape. Finally, we lift these motion samples 
+                back to 3D by directly optimizing for the motion axis and origin.
+              </p>
+            </h2>
+          </div>
+      </div>
+    </div>
+
+    <div class="parent-video-compare-container" id="deformation-comparison">
+
+    <div style="height:3rem" aria-hidden="true"></div>
+
+    <h1>Soft vs. Rigid 3D Mesh Deformation</h1>
+
+    <hr>
+
+    <div class="video-grid deformation-grid">
+      <figure>
+        <div class="deformation-media-card">
+          <video class="deformation-video" autoplay loop muted playsinline controls aria-label="Soft deformation with AnimateAnyMesh">
+            <source src="./resources/results/optimization_comp/animateanymesh.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>Soft 3D Mesh Deformation (for e.g. AnimateAnyMesh)</figcaption>
+      </figure>
+      <figure>
+        <div class="deformation-media-card">
+          <video class="deformation-video" autoplay loop muted playsinline controls aria-label="Rigid deformation with ATOP">
+            <source src="./resources/results/optimization_comp/ours_output.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>Rigid 3D Mesh Deformation (for e.g. ATOP)</figcaption>
+      </figure>
+    </div>
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="subtitle has-text-centered has-text-justified" style="padding-top: 0px">
+          <p style="font-size: 75%;" class="justified">
+            We introduce a rigidly constrained optimization framework that delivers physically 
+            plausible animations. Unlike soft-deformation approaches such as one used in 
+            AnimateAnyMesh (left), which often produce irregular deformations, our method 
+            preserves structural integrity and achieves more accurate motion.
+          </p>
+        </h2>
+      </div>
+    </div>
+
+    </div>
+
+    <div class="parent-video-compare-container" id="results">
+
+    <div style="height:3rem" aria-hidden="true"></div>
+
+    <h1>Results  with Single Part Motion</h1>
+
+    <hr>
+
+    <div class="video-grid video-grid--results">
+      <figure>
+        <div class="result-media-card result-input-card" id="result-input-card">
+          <div class="result-placeholder-prompt">"The screen of the display head is rotating around the hinge"</div>
+          <img src="./resources/results/static_input_mesh/display.png" alt="Static input display mesh" class="result-image">
+        </div>
+        <figcaption>Static Segmented Input 3D Mesh + Text Prompt</figcaption>
+      </figure>
+      <figure>
+        <div class="result-media-card result-media-card--videos" id="result-videos-card">
+          <div class="result-video-stack">
+            <video class="result-video" autoplay loop muted playsinline controls aria-label="Display personalized motion view 1">
+              <source src="./resources/results/videos/display/view1.mp4" type="video/mp4">
+            </video>
+            <video class="result-video" autoplay loop muted playsinline controls aria-label="Display personalized motion view 2">
+              <source src="./resources/results/videos/display/view2.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <figcaption>Personalized Multi-view Videos</figcaption>
+      </figure>
+      <figure>
+        <div class="result-media-card result-media-card--output" id="result-output-card">
+          <video class="result-output-video" autoplay loop muted playsinline controls aria-label="Articulated display mesh output">
+            <source src="./resources/results/articulated_output/display_output.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>Articulated 3D Mesh</figcaption>
+      </figure>
+    </div>
+
+    <div style="height:3rem" aria-hidden="true"></div>
+
+    <hr>
+
+    <div class="video-grid video-grid--results">
+      <figure>
+        <div class="result-media-card result-input-card">
+          <div class="result-placeholder-prompt">"The lamp head is rotating"</div>
+          <img src="./resources/results/static_input_mesh/lamp.png" alt="Static input lamp mesh" class="result-image">
+        </div>
+        <figcaption>Static Segmented Input 3D Mesh + Text Prompt</figcaption>
+      </figure>
+      <figure>
+        <div class="result-media-card result-media-card--videos">
+          <div class="result-video-stack">
+            <video class="result-video" autoplay loop muted playsinline controls aria-label="Lamp personalized motion view 1">
+              <source src="./resources/results/videos/lamp/view1.mp4" type="video/mp4">
+            </video>
+            <video class="result-video" autoplay loop muted playsinline controls aria-label="Lamp personalized motion view 2">
+              <source src="./resources/results/videos/lamp/view2.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <figcaption>Personalized Multi-view Videos</figcaption>
+      </figure>
+      <figure>
+        <div class="result-media-card result-media-card--output">
+          <video class="result-output-video" autoplay loop muted playsinline controls aria-label="Articulated lamp mesh output">
+            <source src="./resources/results/articulated_output/lamp_output.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>Articulated 3D Mesh</figcaption>
+      </figure>
+    </div>
+
+    </div>
+
+    <div class="parent-video-compare-container" id="results-multi-part">
+
+    <div style="height:3rem" aria-hidden="true"></div>
+
+    <h1>Results with Multi Part Motion</h1>
+
+    <hr>
+
+    <div class="video-grid video-grid--results video-grid--results-two-col">
+      <figure>
+        <div class="result-media-card result-input-card">
+          <img src="./resources/results/static_input_mesh/desk.png" alt="Static input desk mesh" class="result-image">
+        </div>
+        <figcaption>Static Segmented Input 3D Mesh</figcaption>
+      </figure>
+      <figure>
+        <div class="result-media-card result-media-card--output">
+          <video class="result-output-video" autoplay loop muted playsinline controls aria-label="Articulated desk mesh output">
+            <source src="./resources/results/articulated_output/desk_output.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>Articulated 3D Mesh</figcaption>
+      </figure>
+    </div>
+
+    <div style="height:3rem" aria-hidden="true"></div>
+
+    <hr>
+
+    <div class="video-grid video-grid--results video-grid--results-two-col">
+      <figure>
+        <div class="result-media-card result-input-card">
+          <img src="./resources/results/static_input_mesh/sink.png" alt="Static input sink mesh" class="result-image">
+        </div>
+        <figcaption>Static Segmented Input 3D Mesh</figcaption>
+      </figure>
+      <figure>
+        <div class="result-media-card result-media-card--output">
+          <video class="result-output-video" autoplay loop muted playsinline controls aria-label="Articulated sink mesh output">
+            <source src="./resources/results/articulated_output/sink_output.mp4" type="video/mp4">
+          </video>
+        </div>
+        <figcaption>Articulated 3D Mesh</figcaption>
+      </figure>
+    </div>
+
+    </div>
+
+    <div class="parent-video-compare-container citation-section" id="citation">
+
+    <div style="height:3rem" aria-hidden="true"></div>
+
+    <h1>Citation</h1>
+
+    <hr>
+
+    <div class="container is-max-desktop content">
+      <p>If you find this work useful, please cite:</p>
+      <div class="citation-block">
+        <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+        <pre id="bibtex-text">@article{vora2026atop,
+  title     = {Articulate That Object Part (ATOP): 3D Part Articulation from Text and via Motion Personalization},
+  author    = {Vora, Aditya and Nag, Sauradip and Wang, Kai and Zhang, Hao},
+  journal   = {ACM Transactions on Graphics},
+  year      = {2026},
+  month     = jun,
+  publisher = {Association for Computing Machinery (ACM)},
+  doi       = {10.1145/3820375},
+  url       = {https://doi.org/10.1145/3820375}
+}</pre>
+      </div>
+    </div>
+
+    </div>
+
+    <script>
+      function copyBibtex() {
+        const bibtex = document.getElementById('bibtex-text').textContent;
+        navigator.clipboard.writeText(bibtex);
+      }
+
+      function syncResultCardHeights() {
+        document.querySelectorAll('.video-grid--results').forEach((grid) => {
+          const leftCard = grid.querySelector('.result-input-card');
+          const videosCard = grid.querySelector('.result-media-card--videos');
+          const outputCard = grid.querySelector('.result-media-card--output');
+          if (!leftCard) return;
+
+          const leftHeight = `${leftCard.offsetHeight}px`;
+          const leftWidth = `${leftCard.offsetWidth}px`;
+
+          if (videosCard) {
+            videosCard.style.height = leftHeight;
+            videosCard.style.width = leftWidth;
+          }
+          if (outputCard) {
+            outputCard.style.height = leftHeight;
+            outputCard.style.width = leftWidth;
+          }
+        });
+      }
+
+      function initResultCardSync() {
+        syncResultCardHeights();
+
+        document.querySelectorAll('.result-input-card .result-image').forEach((inputImage) => {
+          if (!inputImage.complete) {
+            inputImage.addEventListener('load', syncResultCardHeights);
+          }
+        });
+
+        document.querySelectorAll('.video-grid--results .result-video, .video-grid--results .result-output-video').forEach((video) => {
+          if (video.readyState < 1) {
+            video.addEventListener('loadedmetadata', syncResultCardHeights);
+          }
+        });
+
+        window.addEventListener('resize', syncResultCardHeights);
+      }
+
+      window.addEventListener('load', initResultCardSync);
+    </script>
+
+</body>
+
+</html>

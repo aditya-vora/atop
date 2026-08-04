@@ -1,0 +1,58 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Testing / coverage / type-checking caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# ---- Editors / IDEs ----
+.vscode/
+.idea/
+*.swp
+*~
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Logs ----
+*.log
+
+# ---- ATOP: large / generated artifacts (not for version control) ----
+# Model weights and checkpoints
+checkpoints/
+*.ckpt
+*.pth
+*.safetensors
+
+# Datasets and pipeline outputs (see data_prep/DATA_README.md).
+# Adjust to match the --data-root you use.
+dataset/
+datasetv*/
+
+# Temporary cleanup notes / scratch (safe to delete)
+extra/
+reference/

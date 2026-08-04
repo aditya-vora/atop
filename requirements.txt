@@ -1,0 +1,28 @@
+# ATOP — Python dependencies (training / inference)
+#
+# Scope: this file covers finetune.py and infer.py (see src/models/, src/data/,
+# src/pipelines/) — a transformers/accelerate stack, plus xformers for the
+# memory-efficient attention the UNet is built on.
+#
+# Note: diffusers is deliberately NOT listed here. This repo vendors its own
+# customized diffusers/ at the repo root (see src/ip_adapter/, which it
+# depends on), which shadows any pip-installed diffusers for code run from
+# the repo root -- so pinning a pip diffusers version here would be
+# misleading (it's never actually the one imported).
+
+--extra-index-url https://download.pytorch.org/whl/cu128
+
+opencv-python
+
+# cu128 build for Blackwell (RTX 50-series) support — resolved from the
+# --extra-index-url above. Edit the --extra-index-url line above to match
+# your CUDA version on other hardware.
+torch
+
+# finetune.py / infer.py stack
+transformers>=4.38
+accelerate>=0.27
+xformers
+einops
+tqdm
+Pillow
