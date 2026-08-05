@@ -225,11 +225,20 @@ inference steps, resolution, seed, prompt override, ...).
 If you use this code, please cite:
 
 ```bibtex
-@article{atop2025,
-  title   = {ATOP},
-  journal = {arXiv preprint arXiv:2502.07278},
-  year    = {2025},
-  url     = {https://arxiv.org/abs/2502.07278}
+@article{10.1145/3820375,
+author = {Vora, Aditya and Nag, Sauradip and Wang, Kai and Zhang, Hao},
+title = {Articulate That Object Part (ATOP): 3D Part Articulation from Text and via Motion Personalization},
+year = {2026},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/3820375},
+doi = {10.1145/3820375},
+abstract = {We present ATOP (Articulate That Object Part), a novel few-shot method based on motion personalization to articulate a static 3D object with respect to a part and its motion as prescribed in a text prompt. Given the scarcity of available datasets with motion attribute annotations, existing methods struggle to generalize well in this task. In our work, the text input allows us to tap into the power of modern-day diffusion models to generate plausible motion samples for the right object category and part. In turn, the input 3D object provides “image prompting” to personalize the generated motion to the very input object. Our method starts with a few-shot finetuning to inject articulation awareness to current diffusion models to learn a unique motion identifier associated with the target object part. Our finetuning is applied to a pre-trained diffusion model for controllable multi-view motion generation, trained with a small collection of reference motion frames demonstrating appropriate part motion. The resulting motion model can then be employed to realize plausible motion of the input 3D object from multiple views. At last, we transfer the personalized motion to the 3D space of the object via differentiable rendering to optimize part articulation parameters by a score distillation sampling loss. Experiments on PartNet-Mobility and ACD datasets demonstrate that our method can generate realistic motion samples with higher accuracy, leading to more generalizable 3D motion predictions compared to prior approaches in the few-shot setting.},
+note = {Just Accepted},
+journal = {ACM Trans. Graph.},
+month = jun,
+keywords = {Shape and Motion Analysis, Articulation Prediction, Few-Shot finetuning, Motion Personalization, Diffusion Models}
 }
 ```
 
