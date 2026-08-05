@@ -241,6 +241,3 @@ month = jun,
 keywords = {Shape and Motion Analysis, Articulation Prediction, Few-Shot finetuning, Motion Personalization, Diffusion Models}
 }
 ```
-
-> **Note:** update the BibTeX entry above with the paper's full title and author
-> list before public release.
