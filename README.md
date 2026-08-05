@@ -31,7 +31,7 @@ for how to populate them locally.
 
 | Module | Description | Documentation | Status |
 |--------|-------------|---------------|--------|
-| **Data preparation** | Convert PartNet-Mobility (SAPIEN) shapes into multi-view articulation videos and part-segmentation masks. | — | Not in this repo (see [Known issues](#known-issues)) |
+| **Data preparation** | Render multi-view articulation videos, part masks, and camera poses from PartNet-Mobility (SAPIEN) shapes. | [`src/dataset/`](src/dataset/) | Rendering scripts available (see [Known issues](#known-issues)) |
 | **Training** | Finetune the pretrained multi-view image checkpoint into a spatially-controllable multi-view video model. | [`finetune.py`](finetune.py) (`python finetune.py --help`) | Available |
 | **Inference** | Generate multi-view articulation videos from a finetuned checkpoint. | [`infer.py`](infer.py) (`python infer.py --help`) | Available |
 | **3D optimization** | Optimize an articulated 3D result from the generated videos. | — | Coming soon |
@@ -90,11 +90,38 @@ below for the layout `finetune.py`/`infer.py` expect.
 
 ## 2. Training data
 
-The data-preparation pipeline that generates this layout from raw
-PartNet-Mobility shapes isn't part of this repository yet (see
-[Known issues](#known-issues)). `finetune.py`/`infer.py` expect the following
-on disk, however you produce it, rooted at `--data_root` (default
-`datasetv0/`):
+Getting from raw PartNet-Mobility shapes to something `finetune.py`/`infer.py`
+can train on is currently two steps that don't yet connect automatically —
+see [Known issues](#known-issues) for the gap between them.
+
+### 2.1 Render multi-view articulation data
+
+[`src/dataset/`](src/dataset/) renders multi-view videos, rest-state images,
+part masks, and camera poses from PartNet-Mobility shapes, via Blender.
+Both scripts need a `bpy`-enabled Python (either `pip install bpy`, if
+available for your platform/Python version, or run them through Blender
+itself with `blender --background --python <script> -- <args>`); they expect
+a shape already organized as `datasetv0/<Category>/<model_id>/` with the
+standard PartNet-Mobility files (`result.json`, `mobility_v2.json`,
+`textured_objs/`, `images/`) — this repo doesn't include a script to fetch or
+organize raw shapes into that layout.
+
+```bash
+# 1. Build one animated, textured .blend per movable part
+python src/dataset/make_articulated_blend.py \
+    --data-root datasetv0 --category Refrigerator --model-id 10036
+
+# 2. Render that .blend's multi-view videos, images, masks, and poses
+python src/dataset/render_views.py -- \
+    --blend datasetv0/Refrigerator/10036/blends/10036_0_hinge.blend
+```
+
+`render_views.py` writes to
+`datasetv0/<Category>/<model_id>/render/<model_id>_<part_idx>_<joint>/{poses,images,video,masks}/`.
+
+### 2.2 The layout `finetune.py`/`infer.py` actually read
+
+`--data_root` (default `datasetv0/`) must contain:
 
 ```
 <data_root>/<Category>/<shape_id>/
@@ -163,11 +190,21 @@ inference steps, resolution, seed, prompt override, ...).
 
 ## Known issues
 
-- **The data-preparation pipeline isn't in this repository.** Section 2
-  documents the on-disk layout `finetune.py`/`infer.py` expect, but the code
-  that generates it from raw PartNet-Mobility shapes (organizing shapes,
-  articulating meshes, rendering multi-view frames, assembling videos, and
-  rendering the part-segmentation masks) is not included here yet.
+- **`src/dataset/`'s render output doesn't match the layout `finetune.py`/`infer.py`
+  read.** `render_views.py` writes per-part views as plain indices
+  (`00`, `01`, ...) nested under a `render/<model_id>_<part_idx>_<joint>/`
+  folder (section [2.1](#21-render-multi-view-articulation-data)); training
+  expects azimuth-tagged, prefixed filenames directly under a shared
+  `videos/`/`masks`/`poses/` per shape (section
+  [2.2](#22-the-layout-finetunepyinferpy-actually-read)). There's currently
+  no script in this repo that bridges the two — you'd need to rename/move
+  `render_views.py`'s output into the section 2.2 layout yourself (or adapt
+  `src/data/dataset.py` to read the section 2.1 layout directly).
+- **No script organizes raw PartNet-Mobility shapes into `datasetv0/<Category>/<model_id>/`.**
+  `src/dataset/make_articulated_blend.py` expects that layout (with
+  `result.json`, `mobility_v2.json`, `textured_objs/`, `images/`) to already
+  exist; producing it from a raw PartNet-Mobility download is currently a
+  manual step.
 - **Part masks aren't rendered for most shapes in `datasetv0/` yet** — only
   the `Door` category currently has them. `finetune.py`/`infer.py` skip any
   shape missing masks (with a warning) and error out if a split ends up empty
