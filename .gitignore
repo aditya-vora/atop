@@ -48,10 +48,10 @@ checkpoints/
 *.pth
 *.safetensors
 
-# Datasets and pipeline outputs (see data_prep/DATA_README.md).
-# Adjust to match the --data-root you use.
-dataset/
-datasetv*/
+# Datasets and pipeline outputs. Adjust to match the --data-root you use.
+# Anchored to the repo root so this doesn't also catch src/dataset/ (source code).
+/dataset/
+/datasetv*/
 
 # Temporary cleanup notes / scratch (safe to delete)
 extra/
